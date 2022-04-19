@@ -6,6 +6,15 @@
 # Runs all three programs and displays the output and time of each
 #
 
+type make gcc go cargo rustc
+ERROR="$?"
+
+if [[ ERROR -ne 0 ]]; then 
+  echo
+  echo "run: one or more of the above programs are not installed. the programs in question have lines that end in \"not found\". please make sure that these programs are installed through your package manager"
+  exit 0
+fi
+
 clear
 echo "#####################"
 echo "     Compilation     "
@@ -20,7 +29,8 @@ echo
 
 echo "Compiling uirc in Go..."
 cd ./go
-# compile in go
+echo "go build ."
+go build .
 cd ..
 echo
 
@@ -45,7 +55,7 @@ echo
 
 echo "Executing uirc in Go..."
 cd ./go
-# execute in go
+{ time ./uirc ../imgs/*.jpg > /dev/null 2>&1 ; } 2> ../out/go.txt
 cd ..
 echo
 
