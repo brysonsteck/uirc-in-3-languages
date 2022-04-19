@@ -9,11 +9,13 @@
 type make gcc go cargo rustc
 ERROR="$?"
 
-if [[ ERROR -ne 0 ]]; then 
+if [ $ERROR -ne 0 ]; then 
   echo
   echo "run: one or more of the above programs are not installed. the programs in question have lines that end in \"not found\". please make sure that these programs are installed through your package manager"
-  exit 0
+  exit 1
 fi
+
+exit 0
 
 clear
 echo "#####################"
