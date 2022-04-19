@@ -32,14 +32,14 @@ func readFile(file string, rFlag bool, req bool, url string) int {
   var wuneven, huneven float32;
   imgFile, err := os.Open(file);
   if err != nil {
-    fmt.Printf("uirc: %s: %s\n", file, err);
+    fmt.Printf("uirc-go: %s: %s\n", file, err);
     os.Exit(6);
   }
   defer imgFile.Close();
 
   img, _, err := image.DecodeConfig(imgFile);
   if err != nil {
-    fmt.Printf("uirc: %s: %s\n", file, err);
+    fmt.Printf("uirc-go: %s: %s\n", file, err);
     os.Exit(3);
   }
   
@@ -78,20 +78,20 @@ func download(url string) int {
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
-    fmt.Printf("FAIL\nuirc: %s: request failed with code %d, trying local fs instead\n", url, response.StatusCode);
+    fmt.Printf("FAIL\nuirc-go: %s: request failed with code %d, trying local fs instead\n", url, response.StatusCode);
     return 4;
 	}
 
 	file, err := os.Create("/tmp/uirc.tmp")
 	if err != nil {
-    fmt.Printf("FAIL\nuirc: request complete, but cannot write file to /tmp for evaluation\n");
+    fmt.Printf("FAIL\nuirc-go: request complete, but cannot write file to /tmp for evaluation\n");
     os.Exit(9);
 	}
 	defer file.Close()
 
 	_, err = io.Copy(file, response.Body)
 	if err != nil {
-    fmt.Printf("uirc: error saving file\n");
+    fmt.Printf("uirc-go: error saving file\n");
     os.Exit(9);
 	}
   fmt.Printf("ok\n");
@@ -107,14 +107,14 @@ func handleArg(arg string) {
           "OPTIONS:\n" +
           "informational:\n" +
           "  -h, --help   \t: Display this message\n" +
-          "  -l, --license\t: Display the license disclaimer for uirc (BSD 2-Clause)\n" +
-          "  -v, --version\t: Display the version of uirc\n\n" +
+          "  -l, --license\t: Display the license disclaimer for uirc-go (BSD 2-Clause)\n" +
+          "  -v, --version\t: Display the version of uirc-go\n\n" +
 
           "functional:\n" +
           "  -r, --res    \t: Display the resolution of the image (in addition to the ratio)\n\n" +
 
           "HELP:\n" +
-          "For more information on how to use uirc, open the man page uirc(1).\n";
+          "For more information on how to use uirc-go, open the man page uirc(1).\n";
 
   first = arg[0:1]; 
 
