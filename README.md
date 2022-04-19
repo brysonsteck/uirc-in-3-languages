@@ -8,16 +8,16 @@
 
 With these different implementations of uirc, it will be able to test how modern languages with similar features stack up to the most influential programming language of all time (but that is also over 50 years old) in the following ways:
 
-1. Project setup
+* Project setup
   * Language installation
   * Creating the code
   * Compilation
   * Package/Library installation
-1. File size
+* File size
   * Lines of code
   * Size of binaries
   * Size of each directory
-1. Speed
+* Speed
   * Compile time
   * Runtime (using `time` on Linux) using multiple inputs
 
