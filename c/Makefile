@@ -5,10 +5,10 @@ include config.mk
 SRC = uirc.c
 
 uirc: ${SRC}
-	${CC} ${OPTIONS} -l curl -o uirc -O ${SRC} -lm
+	${CC} ${OPTIONS} -o uirc -O ${SRC} -lm -lcurl 
 
 debug: uirc
-	${CC} -g ${OPTIONS} -l curl -o d_uirc -O ${SRC} -lm
+	${CC} -g ${OPTIONS} -o d_uirc -O ${SRC} -lm -lcurl
 	gdb d_uirc
 	rm d_uirc
 
