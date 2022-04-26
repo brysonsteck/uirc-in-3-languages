@@ -21,67 +21,70 @@ echo "     Compilation     "
 echo "#####################"
 echo
 
-echo "Compiling uirc in C..."
+echo "C"
+echo "--------"
 cd ./c
-make -j$(nproc)
+time make -j$(nproc)
 cd ..
 echo
+ls -lh ./c | awk '$9 == "uirc" {print "filesize of C binary: " $5}'
+wc ./c/uirc.c | awk '{print "line count of C file: " $1}'
+echo
+echo "Press [ENTER] to continue..."
+read
 
-echo "Compiling uirc in Go..."
+echo "Go"
+echo "--------"
 cd ./go
 echo "go build ."
-go build .
+time go build .
 cd ..
 echo
+ls -lh ./go | awk '$9 == "uirc" {print "filesize of Go binary: " $5}'
+wc ./go/uirc.go | awk '{print "line count of Go file: " $1}'
+echo
+echo "Press [ENTER] to continue..."
+read
 
-echo "Compiling uirc in Rust..."
+echo "Rust"
+echo "--------"
 cd ./rust
 echo "cargo build --release"
-cargo build --release
+time cargo build --release
 cd ..
 echo 
+ls -lh ./rust/target/release/uirc-rust | awk '$9 == "uirc" {print "filesize of Rust binary: " $5}'
+wc ./rust/src/main.rs | awk '{print "line count of Rust file: " $1}'
+echo
+echo "Press [ENTER] to continue..."
+read
 
 echo "#####################"
 echo "      Execution      "
 echo "#####################"
 echo
 
-mkdir out
-
-echo "Executing uirc in C..."
+echo "C"
+echo "--------"
 cd ./c
-{ time ./uirc ../imgs/*.jpg > /dev/null 2>&1 ; } 2> ../out/c.txt
+time ./uirc ../imgs/*.jpg
 cd ..
 echo
+echo "Press [ENTER] to continue..."
+read
 
-echo "Executing uirc in Go..."
+echo "Go"
+echo "--------"
 cd ./go
-{ time ./uirc ../imgs/*.jpg > /dev/null 2>&1 ; } 2> ../out/go.txt
+time ./uirc ../imgs/*.jpg
 cd ..
 echo
+echo "Press [ENTER] to continue..."
+read
 
-echo "Executing uirc in Rust..."
+echo "Rust"
+echo "--------"
 cd ./rust
-{ time ./target/release/uirc-rust ../imgs/*.jpg > /dev/null 2>&1 ; } 2> ../out/rust.txt
+time ./target/release/uirc-rust ../imgs/*.jpg
 cd ..
 echo
-
-echo "#####################"
-echo "       Results       "
-echo "#####################"
-echo
-
-echo "Results for uirc in C:"
-cat ./out/c.txt
-echo
-
-echo "Results for uirc in Go:"
-cat ./out/go.txt
-echo 
-
-echo "Results for uirc in Rust:"
-cat ./out/rust.txt
-echo
-
-rm -r ./out
-
