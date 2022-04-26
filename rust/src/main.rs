@@ -1,5 +1,6 @@
 use image::GenericImageView;
 use std::fs::File;
+use std::fs;
 use std::env;
 use std::process;
 use std::io::{Write};
@@ -20,7 +21,7 @@ fn get_bcf(width: u32, height: u32) -> u32 {
   return bcf;
 }
 
-fn read_file(file: &str, r_flag: bool, req: bool, url: &mut String) -> i32 {
+fn read_file<'a>(mut file: &'a str, r_flag: bool, req: bool, url: &'a mut String) -> i32 {
   let width: u32; let height: u32; let factor: u32;
   let wuneven: f32; let huneven: f32; 
   let img = image::open(file).unwrap();
@@ -31,9 +32,11 @@ fn read_file(file: &str, r_flag: bool, req: bool, url: &mut String) -> i32 {
   wuneven = (height as f32) / (width as f32);
   huneven = (width as f32) / (height as f32);
 
-  // if req == true {
-
-  // }
+  if req == true {
+    // split the url into a vector and then get the last element
+    let mut url_vec: Vec<&str> = url.split("/").collect();
+    file = url_vec.pop().unwrap();
+  }
 
   if factor == 1 {
     if width < height {
@@ -53,21 +56,18 @@ fn read_file(file: &str, r_flag: bool, req: bool, url: &mut String) -> i32 {
 }
 
 fn download(url: &mut str) -> i32 {
-  // download the file and write it to /tmp/uirc.tmp using std::io::Write
-  let mut easy = Easy::new();
-  easy.url(url).unwrap();
-  easy.write_function(|data| {
-    let path = "/tmp/uirc.tmp";
-    let mut output = File::create(path).unwrap();
-    output.write_all(data).unwrap();
+  let mut handle = Easy::new();
+  let mut file = File::create("/tmp/uirc.png").unwrap();
+  handle.url(url).unwrap();
+  handle.write_function(move |data| {
+    file.write_all(data).unwrap();
     Ok(data.len())
   }).unwrap();
-
-  easy.perform().unwrap();
+  handle.perform().unwrap();
   return 0;
 }
 
-fn handle_arg(arg: &mut String, mut r_flag: bool) {
+fn handle_arg(arg: &mut String, mut r_flag: bool) -> bool {
   let complete:i32;
   let first:&str;
   let first_two:&str;
@@ -115,7 +115,7 @@ fn handle_arg(arg: &mut String, mut r_flag: bool) {
       process::exit(1);
     } else if "--res" == arg || "-r" == arg {
       r_flag = true;
-      return;
+      return r_flag;
     } else if "--version" == arg || "-v" == arg {
       println!("uirc-rust v{}", VERSION);
       process::exit(1);
@@ -126,25 +126,32 @@ fn handle_arg(arg: &mut String, mut r_flag: bool) {
   }
 
   if "http" == first_four {
-    println!("downloading \"{}\"...", arg);
+    print!("downloading \"{}\"...", arg);
+    std::io::stdout().flush().unwrap();
     download(arg);
-    complete = read_file("/tmp/uirc.tmp", r_flag, true, arg);
+    println!("ok");
+    complete = read_file("/tmp/uirc.png", r_flag, true, arg);
     if complete != 0 {
       read_file(arg, r_flag, false, &mut empty_str);
     } else {
-      // fs::remove_file("/tmp/uirc.tmp");
+      let result = fs::remove_file("/tmp/uirc.png");
+      if result.is_err() {
+        println!("failed to remove temporary file");
+      }
     }
   } else {
     // if no more flags, run ratio calculations
     read_file(arg, r_flag, false, &mut empty_str);
   }
+
+  return r_flag;
 }
 
 fn main() {
   let mut runs:i32 = 0;
   let init_args: Vec<String> = env::args().collect();
   let args = &init_args[1..];
-  let r_flag:bool = false;
+  let mut r_flag:bool = false;
 
   if args.len() < 1 {
     println!("uirc-rust: at least one argument is required");
@@ -152,7 +159,7 @@ fn main() {
   }
 
   for arg in args.iter() {
-    handle_arg(&mut String::from(arg), r_flag);
+    r_flag = handle_arg(&mut String::from(arg), r_flag);
     runs = runs + 1;
   }
 
