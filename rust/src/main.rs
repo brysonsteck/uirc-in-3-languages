@@ -34,7 +34,6 @@ fn read_file<'a>(mut file: &'a str, r_flag: bool, req: bool, url: &'a mut String
   huneven = (width as f32) / (height as f32);
 
   if req == true {
-    // split the url into a vector and then get the last element
     let mut url_vec: Vec<&str> = url.split("/").collect();
     file = url_vec.pop().unwrap();
   }
