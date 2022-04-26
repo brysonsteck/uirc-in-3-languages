@@ -36,8 +36,10 @@ echo
 
 echo "Compiling uirc in Rust..."
 cd ./rust
+echo "cargo build"
+cargo build
 echo "cargo build -r"
-cargo build -r
+cargo build -r 
 cd ..
 echo 
 

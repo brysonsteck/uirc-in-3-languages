@@ -26,7 +26,8 @@ fn read_file<'a>(mut file: &'a str, r_flag: bool, req: bool, url: &'a mut String
   let wuneven: f32; let huneven: f32; 
   let img = image::open(file).unwrap();
 
-  (width, height) = img.dimensions();
+  width = img.dimensions().0;
+  height = img.dimensions().1;
 
   factor = get_bcf(width, height);
   wuneven = (height as f32) / (width as f32);
