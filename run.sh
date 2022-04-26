@@ -15,8 +15,6 @@ if [ $ERROR -ne 0 ]; then
   exit 1
 fi
 
-exit 0
-
 clear
 echo "#####################"
 echo "     Compilation     "
@@ -25,7 +23,7 @@ echo
 
 echo "Compiling uirc in C..."
 cd ./c
-make
+make -j$(nproc)
 cd ..
 echo
 
@@ -38,7 +36,8 @@ echo
 
 echo "Compiling uirc in Rust..."
 cd ./rust
-# compile in rust
+echo "cargo build -r"
+cargo build -r
 cd ..
 echo 
 
@@ -63,7 +62,7 @@ echo
 
 echo "Executing uirc in Rust..."
 cd ./rust
-# execute in rust
+{ time ./target/release/uirc-rust ../imgs/*.jpg > /dev/null 2>&1 ; } 2> ../out/rust.txt
 cd ..
 echo
 
