@@ -21,5 +21,7 @@ With these different implementations of uirc, it will be able to test how modern
   * Compile time
   * Runtime (using `time` on Linux) using multiple inputs
 
+# License
 
+All files, unless noted otherwise, are Free and Open Source Software under the BSD 2-Clause License. See [LICENSE](LICENSE) for more information.
 
