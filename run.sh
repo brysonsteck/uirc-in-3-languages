@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # uirc in three different languages
 # Bryson Steck (@brysonsteck)
