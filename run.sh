@@ -53,7 +53,7 @@ echo "cargo build --release"
 time cargo build --release
 cd ..
 echo 
-ls -lh ./rust/target/release/uirc-rust | awk '$9 == "uirc" {print "filesize of Rust binary: " $5}'
+ls -lh ./rust/target/release | awk '$9 == "uirc-rust" {print "filesize of Rust binary: " $5}'
 wc ./rust/src/main.rs | awk '{print "line count of Rust file: " $1}'
 echo
 echo "Press [ENTER] to continue..."
